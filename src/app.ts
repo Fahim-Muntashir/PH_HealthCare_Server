@@ -1,6 +1,8 @@
 import express, { Application, Request, Response } from "express";
 import { IndexRoutes } from "./app/routes";
 import { prisma } from "./app/lib/prisma";
+import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { notFound } from "./app/middleware/notFound";
 
 const app: Application = express();
 
@@ -22,4 +24,6 @@ app.get("/", async (req: Request, res: Response) => {
   res.status(200).json({ success: "Hello, TypeScript + Express!", specialty });
 });
 
+app.use(globalErrorHandler);
+app.use(notFound);
 export default app;
