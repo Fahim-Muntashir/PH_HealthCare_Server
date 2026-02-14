@@ -1,59 +1,40 @@
 import { Request, Response } from "express";
+import status from "http-status";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
-import status from "http-status";
-import { doctorService } from "./doctor.service";
+import { UserService } from "./user.service";
 
-const getAllDoctors = catchAsync(async (req: Request, res: Response) => {
-  const result = await doctorService.getAllDoctors();
+const createDoctor = catchAsync(
+    async (req: Request, res: Response) => {
+        const payload = req.body;
 
-  sendResponse(res, {
-    httpStatusCode: status.OK,
-    success: true,
-    message: "Doctors fetched successfully",
-    data: result,
-  });
-});
+        const result = await UserService.createDoctor(payload);
 
-const getSingleDoctor = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await doctorService.getSingleDoctor(id);
+        sendResponse(res, {
+            httpStatusCode: status.CREATED,
+            success: true,
+            message: "Doctor registered successfully",
+            data: result,
+        })
+    }
+)
 
-  sendResponse(res, {
-    httpStatusCode: status.OK,
-    success: true,
-    message: "Doctor fetched successfully",
-    data: result,
-  });
-});
+const createAdmin = catchAsync(
+    async (req: Request, res: Response) => {
+        const payload = req.body;
 
-const updateDoctor = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await doctorService.updateDoctor(id, req.body);
+        const result = await UserService.createAdmin(payload);
 
-  sendResponse(res, {
-    httpStatusCode: status.OK,
-    success: true,
-    message: "Doctor updated successfully",
-    data: result,
-  });
-});
+        sendResponse(res, {
+            httpStatusCode: status.CREATED,
+            success: true,
+            message: "Admin registered successfully",
+            data: result,
+        })
+    }
+)
 
-const deleteDoctor = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await doctorService.deleteDoctor(id);
-
-  sendResponse(res, {
-    httpStatusCode: status.OK,
-    success: true,
-    message: "Doctor deleted successfully",
-    data: result,
-  });
-});
-
-export const doctorController = {
-  getAllDoctors,
-  getSingleDoctor,
-  updateDoctor,
-  deleteDoctor,
+export const UserController = {
+    createDoctor,
+    createAdmin,
 };
